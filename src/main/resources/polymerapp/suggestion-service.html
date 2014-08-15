@@ -1,0 +1,41 @@
+<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="components/core-ajax/core-ajax.html">
+
+<polymer-element name="suggestion-service" attributes="user suggestions">
+  <template>
+    <style>
+    :host {
+      display: none;
+    }
+    </style>
+    <core-ajax id="ajax"
+      auto
+      url="/api/suggestions/to"
+      on-core-response="{{suggestionsLoaded}}"
+      handleAs="json">
+    </core-ajax>
+  </template>
+  <script>
+    Polymer('suggestion-service', {
+        created: function () {
+            this.suggestions = [];
+        },
+        ready: function () {
+
+            var headers = {
+                Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
+            };
+
+            console.log("user", this.user);
+            console.log("header for suggestions", JSON.stringify(headers));
+
+            this.$.ajax.headers = JSON.stringify(headers);
+        },
+        suggestionsLoaded: function () {
+            console.log("Suggestions loaded");
+            // Make a copy of the loaded data
+            this.suggestions = this.$.ajax.response.slice(0);
+        }
+    });
+  </script>
+</polymer-element>

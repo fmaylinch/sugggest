@@ -1,0 +1,110 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="friend-service.html">
+<link rel="import" href="friend-card.html">
+<link rel="import" href="components/core-icons/core-icons.html">
+<link rel="import" href="components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="components/paper-input/paper-input.html">
+
+<polymer-element name="friend-list" attributes="user">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    #emailform {
+        display: block;
+        position: relative;
+        width: 100%;
+    }
+    friend-card {
+      margin-bottom: 30px;
+    }
+
+    </style>
+
+      <core-ajax id="ajax"
+                 method="POST" url="/api/users/friends"
+                 contentType="application/json"
+                 on-core-response="{{friendAdded}}"
+                 on-core-error="{{addFriendFailed}}"
+                 handleAs="json">
+      </core-ajax>
+
+      <friend-service id="service" user="{{user}}" friends="{{friends}}"></friend-service>
+
+      <div layout vertical center>
+
+          <div id="emailform">
+              <div layout horizontal>
+                  <paper-input flex label="Email" value="{{email}}"></paper-input>
+                  <paper-icon-button icon="add-circle" on-click="{{addFriend}}"></paper-icon-button>
+              </div>
+          </div>
+
+          <template repeat="{{friend in friends}}">
+              <friend-card user="{{user}}" friend="{{friend}}">
+              </friend-card>
+          </template>
+
+          <template if="{{friends.length == 0}}">
+              <p>No friends yet. Add them!<p>
+              <p>(Tell them to sign up if they haven't)</p>
+          </template>
+
+      </div>
+    
+  </template>
+
+  <script>
+
+      Polymer('friend-list', {
+
+          email: "",
+
+          ready: function () {
+
+              var headers = {
+                  Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
+              };
+
+              console.log("user", this.user);
+              console.log("header for adding friend", JSON.stringify(headers));
+
+              this.$.ajax.headers = JSON.stringify(headers);
+          },
+
+          addFriend: function() {
+
+              var friend = {
+                  email: this.email
+              };
+
+              console.log("Adding friend: ", friend);
+
+              this.$.ajax.body = JSON.stringify(friend);
+              this.$.ajax.go();
+          },
+
+          friendAdded: function() {
+
+              console.log("Friend added", this.$.ajax.response);
+              this.email = "";
+              this.$.service.refresh();
+              // TODO: display toast or message
+          },
+
+          addFriendFailed: function(event, detail) {
+
+              // TODO: display toast or message
+              if (detail.xhr.status == 404) {
+                  alert("there's no user with that email. Invite that friend!");
+              } else {
+                  console.log("Ooops, something went wrong (status: " + detail.xhr.status + "). Please, try again.");
+              }
+          }
+      });
+
+  </script>
+
+</polymer-element>

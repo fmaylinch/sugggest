@@ -1,0 +1,202 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="components/paper-input/paper-input.html">
+<link rel="import" href="components/paper-button/paper-button.html">
+<link rel="import" href="components/core-ajax/core-ajax.html">
+
+<polymer-element name="login-form" attributes="user">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+
+    paper-button[raisedButton].signin {
+        background: #428bca;
+        color: #fff;
+        margin: 5px;
+    }
+    paper-button[raisedButton].signup {
+        background: #42a64b;
+        color: #fff;
+        margin: 5px;
+    }
+
+    #messages {
+        margin: 15px;
+    }
+
+    #error {
+        color: red;
+    }
+    #info {
+        color: blue;
+    }
+
+    </style>
+
+      <core-ajax id="signInAjax"
+                 method="POST" url="/api/users/signin"
+                 contentType="application/json"
+                 on-core-response="{{userSignedIn}}"
+                 on-core-error="{{signInFailed}}"
+                 handleAs="json">
+      </core-ajax>
+
+      <core-ajax id="signUpAjax"
+                 method="POST" url="/api/users/signup"
+                 contentType="application/json"
+                 on-core-response="{{userSignedUp}}"
+                 on-core-error="{{signUpFailed}}"
+                 handleAs="json">
+      </core-ajax>
+
+      <div layout vertical center>
+
+          <div id="messages">
+              <span id="error">{{errorMessage}}</span>
+              <span id="info">{{infoMessage}}</span>
+          </div>
+
+          <paper-input label="Name" value="{{form.name}}" hidden?="{{signUpFieldsHidden}}"></paper-input>
+          <paper-input label="Email" value="{{form.email}}"></paper-input>
+          <paper-input label="Password" value="{{form.password}}" type="password"></paper-input>
+          <paper-button raisedButton class="signin" label="Sign In" on-click="{{signIn}}"></paper-button>
+          <paper-button raisedButton class="signup" label="Sign Up" on-click="{{signUp}}"></paper-button>
+
+      </div>
+    
+  </template>
+
+  <script>
+
+      Polymer('login-form', {
+
+          signUpFieldsHidden: true,
+
+          infoMessage: "",
+          errorMessage: "",
+
+          ready: function() {
+
+              this.form = {
+                  name: "",
+                  email: jQuery.cookie("email") || "",
+                  password: jQuery.cookie("password") || ""
+              };
+
+              if (this.form.email != "" && this.form.password != "") {
+                  console.log("Auto sign in");
+                  this.signIn();
+              }
+          },
+
+          setUserSigned: function(userSigned) {
+
+              jQuery.cookie("email", userSigned.email);
+              jQuery.cookie("password", this.form.password);
+
+              this.user = {
+                  id: userSigned.id,
+                  name: userSigned.name,
+                  email: userSigned.email,
+                  password: this.form.password,
+                  logged: true
+              };
+          },
+
+          clearMessages: function () {
+              this.infoMessage = "";
+              this.errorMessage = "";
+          },
+
+          // Sign In
+
+          signIn: function() {
+
+              this.signUpFieldsHidden = true;
+              this.form.name = "";
+
+              this.clearMessages();
+
+              if (this.form.email == "" || this.form.password == "") {
+                  this.errorMessage = "Please, enter email and password to sign in.";
+              } else {
+                  var userToSignIn = {
+                      email: this.form.email,
+                      password: this.form.password
+                  };
+
+                  this.$.signInAjax.body = JSON.stringify(userToSignIn);
+                  this.$.signInAjax.go();
+              }
+          },
+
+          userSignedIn: function() {
+
+              var userSigned = this.$.signInAjax.response;
+              this.setUserSigned(userSigned);
+          },
+
+          signInFailed: function(event, detail) {
+
+              var status = detail.xhr.status;
+
+              if (status == 401) {
+                  this.errorMessage = "Sorry, email or password are wrong."
+              } else {
+                  this.errorMessage = "Ooops, something went wrong (status: " + status + "). Please, try again.";
+              }
+          },
+
+          // Sign Up
+
+          signUp: function() {
+
+              this.clearMessages();
+
+              if (!this.signUpFieldsHidden)
+              {
+                  if (this.form.name == "" && this.form.email == "" || this.form.password == "") {
+                      this.errorMessage = "Please, enter your name, email and password to sign up.";
+                  } else {
+                      var userToSignUp = {
+                          name: this.form.name,
+                          email: this.form.email,
+                          password: this.form.password
+                      };
+
+                      console.log("User to sign up:", userToSignUp);
+
+                      this.$.signUpAjax.body = JSON.stringify(userToSignUp);
+                      this.$.signUpAjax.go();
+                  }
+              } else {
+                  this.signUpFieldsHidden = false;
+                  this.infoMessage = "Please, enter also your name. Your friends will see this name.";
+              }
+          },
+
+          userSignedUp: function() {
+
+              var userSigned = this.$.signUpAjax.response;
+              this.setUserSigned(userSigned);
+          },
+
+          signUpFailed: function(event, detail) {
+
+              var status = detail.xhr.status;
+
+              if (status == 412) {
+                  this.errorMessage = "Email is invalid, please check that you typed it correctly."
+              } else if (status == 403) {
+                  this.errorMessage = "Email is already used by another user. If it's yours, sign in."
+              } else {
+                  this.errorMessage = "Ooops, something went wrong (status: " + status + "). Please, try again.";
+              }
+          }
+      });
+
+  </script>
+
+</polymer-element>

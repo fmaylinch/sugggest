@@ -1,0 +1,110 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="components/paper-shadow/paper-shadow.html">
+<link rel="import" href="components/core-icons/core-icons.html">
+<link rel="import" href="components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="components/paper-input/paper-input.html">
+
+<polymer-element name="friend-card" attributes="user friend send suggestion">
+  <template>
+    <style>
+    :host {
+      display: block;
+      position: relative;
+      background-color: white;
+      padding: 20px;
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+    .card-header {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 400;
+    }
+    .email {
+        font-size: 1rem;
+        color: #888888;
+    }
+    core-icon-button {
+        fill: #636363;
+    }
+    </style>
+
+      <core-ajax id="ajax"
+                 method="POST" url="/api/suggestions"
+                 contentType="application/json"
+                 on-core-response="{{suggestionPosted}}"
+                 on-core-error="{{suggestionFailed}}"
+                 handleAs="json">
+      </core-ajax>
+
+
+      <paper-shadow z="1">
+
+        <h2>{{friend.name}}</h2>
+        <p class="email">{{friend.email}}</p>
+
+        <template if="{{send}}">
+            <div layout horizontal>
+                <paper-input flex multiline label="your suggestion..." value="{{suggestion}}"></paper-input>
+                <paper-icon-button icon="send" on-click="{{sendSuggestion}}"></paper-icon-button>
+            </div>
+        </template>
+
+    </paper-shadow>
+
+  </template>
+  <script>
+
+      Polymer('friend-card', {
+
+          send: true,
+
+          suggestion: "",
+
+          ready: function () {
+
+              var headers = {
+                  Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
+              };
+
+              console.log("user", this.user);
+              console.log("header for sending suggestion", JSON.stringify(headers));
+
+              this.$.ajax.headers = JSON.stringify(headers);
+          },
+
+          sendSuggestion: function() {
+
+              var suggestion = {
+                  text: this.suggestion,
+                  from: this.user.id,
+                  to: this.friend.id
+              };
+
+              console.log("Sending suggestion: ", suggestion);
+
+              this.$.ajax.body = JSON.stringify(suggestion);
+              this.$.ajax.go();
+          },
+
+          suggestionPosted: function() {
+
+              console.log("Suggestion posted", this.$.ajax.response);
+              this.suggestion = "";
+              // TODO: display toast or message
+          },
+
+          signInFailed: function(event, detail) {
+
+              console.log("Ooops, something went wrong (status: " + detail.xhr.status + "). Please, try again.");
+              // TODO: display toast or message
+          }
+      });
+
+  </script>
+</polymer-element>

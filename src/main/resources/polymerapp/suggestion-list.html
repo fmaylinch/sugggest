@@ -1,0 +1,43 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="suggestion-service.html">
+<link rel="import" href="suggestion-card.html">
+
+<polymer-element name="suggestion-list" attributes="user">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+    suggestion-card {
+      margin-bottom: 30px;
+    }
+    </style>
+
+      <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}"></suggestion-service>
+
+      <div layout vertical center>
+
+          <template repeat="{{suggestion in suggestions}}">
+              <suggestion-card>
+                  <h2>{{suggestion.fromName}}:</h2>
+                  <p>{{suggestion.text}}</p>
+              </suggestion-card>
+          </template>
+
+          <template if="{{suggestions.length == 0}}">
+              <p>No suggestions yet!</p>
+              <p>Tell someone to add you as a friend!</p>
+          </template>
+
+      </div>
+    
+  </template>
+
+  <script>
+
+      Polymer({});
+
+  </script>
+
+</polymer-element>

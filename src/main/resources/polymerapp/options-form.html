@@ -1,0 +1,48 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="components/paper-button/paper-button.html">
+<link rel="import" href="friend-card.html">
+
+<polymer-element name="options-form" attributes="user">
+  <template>
+    <style>
+    :host {
+      display: block;
+      width: 100%;
+    }
+
+    friend-card {
+        margin-bottom: 30px;
+    }
+
+    paper-button[raisedButton].colored {
+        background: #d9534f;
+        color: #fff;
+    }
+
+    </style>
+
+      <div layout vertical center>
+
+          <friend-card send="false" user="{{user}}" friend="{{user}}">
+          </friend-card>
+
+          <paper-button raisedButton class="colored" label="Logout" on-tap="{{logout}}"></paper-button>
+
+      </div>
+    
+  </template>
+
+  <script>
+
+      Polymer('options-form', {
+
+          logout: function() {
+
+              jQuery.removeCookie("password");
+              this.user.logged = false;
+          }
+      });
+
+  </script>
+
+</polymer-element>

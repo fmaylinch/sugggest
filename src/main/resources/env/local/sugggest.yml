@@ -1,0 +1,9 @@
+mongoUrl: mongodb://localhost:27017/sugggest
+
+server:
+  applicationConnectors:
+  - type: http
+    port: 8090
+  adminConnectors:
+  - type: http
+    port: 8091
