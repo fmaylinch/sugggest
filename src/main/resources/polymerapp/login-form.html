@@ -81,8 +81,8 @@
 
               this.form = {
                   name: "",
-                  email: jQuery.cookie("email") || "",
-                  password: jQuery.cookie("password") || ""
+                  email: $.cookie("email") || "",
+                  password: $.cookie("password") || ""
               };
 
               if (this.form.email != "" && this.form.password != "") {
@@ -93,8 +93,8 @@
 
           setUserSigned: function(userSigned) {
 
-              jQuery.cookie("email", userSigned.email);
-              jQuery.cookie("password", this.form.password);
+              $.cookie("email", userSigned.email);
+              $.cookie("password", this.form.password);
 
               this.user = {
                   id: userSigned.id,
