@@ -13,7 +13,9 @@ public interface SuggestionService
 	/** Creates the suggestion and sets the generated id */
 	void create(Suggestion suggestion);
 
+	/** Get suggestions by "target" user, sorted by updated date (newest first). */
 	List<Suggestion> findByUserTo(String userToId);
 
+	/** Get suggestions by "target" user, sorted by updated date (newest first). */
 	List<Suggestion> findByUserFrom(String userFromId);
 }

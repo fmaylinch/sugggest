@@ -30,12 +30,12 @@ public class SuggestionServiceImpl implements SuggestionService {
 	@Override
 	public List<Suggestion> findByUserTo(String userToId)
 	{
-		return ds.find(Suggestion.class).filter(FIELD_TO, userToId).asList();
+		return ds.find(Suggestion.class).filter(FIELD_TO, userToId).order("-updated").asList();
 	}
 
 	@Override
 	public List<Suggestion> findByUserFrom(String userFromId)
 	{
-		return ds.find(Suggestion.class).filter(FIELD_FROM, userFromId).asList();
+		return ds.find(Suggestion.class).filter(FIELD_FROM, userFromId).order("-updated").asList();
 	}
 }
