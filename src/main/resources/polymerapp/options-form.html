@@ -26,7 +26,7 @@
           <friend-card send="false" user="{{user}}" friend="{{user}}">
           </friend-card>
 
-          <paper-button raisedButton class="colored" label="Logout" on-tap="{{logout}}"></paper-button>
+          <paper-button raisedButton class="colored" label="Log Out" on-tap="{{logout}}"></paper-button>
 
       </div>
     
@@ -38,6 +38,7 @@
 
           logout: function() {
 
+              $.removeCookie("email");
               $.removeCookie("password");
               this.user.logged = false;
           }
