@@ -37,12 +37,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByEmail(String email)
 	{
-		return ds.find(User.class).filter(FIELD_EMAIL, email).get();
+		return ds.find(User.class).filter(FIELD_EMAIL, email.toLowerCase()).get();
 	}
 
 	@Override
 	public String save(User user)
 	{
+		user.setEmail(user.getEmail().toLowerCase());
 		final Key<User> key = ds.save(user);
 		return (String) key.getId();
 	}
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
 	public User findByEmailAndPwd(String email, String password) {
 
 		return ds.find(User.class)
-				.filter(FIELD_EMAIL, email)
+				.filter(FIELD_EMAIL, email.toLowerCase())
 				.filter(FIELD_PASSWORD, password).get();
 	}
 
@@ -66,6 +67,8 @@ public class UserServiceImpl implements UserService {
 	public User addFriendByEmail(String userId, String friendEmail) {
 
 		final User user = findById(userId);
+
+		friendEmail = friendEmail.toLowerCase();
 
 		if (user != null && !user.getEmail().equals(friendEmail))
 		{
