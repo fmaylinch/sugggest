@@ -51,6 +51,11 @@
 
           <!-- Tabs -->
           <core-toolbar>
+
+              <template if="{{!user.logged}}">
+                  <h2>Sugggest</h2>
+              </template>
+
               <paper-tabs id="tabs" self-end>
                   <template if="{{user.logged}}">
                       <paper-tab name="suggestions">Suggestions</paper-tab>
@@ -58,6 +63,7 @@
                       <paper-tab name="options">You</paper-tab>
                   </template>
               </paper-tabs>
+
           </core-toolbar>
 
           <!-- Main content  -->
