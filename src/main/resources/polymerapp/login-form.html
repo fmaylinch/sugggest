@@ -81,33 +81,15 @@
 
               this.form = {
                   name: "",
-                  email: $.cookie("email") || "",
-                  password: $.cookie("password") || ""
+                  email: $.cookie("email"),
+                  password: "",
+                  encodedPassword: $.cookie("password")
               };
 
-              if (this.form.email != "" && this.form.password != "") {
+              if (this.form.email && this.form.encodedPassword) {
                   console.log("Auto sign in");
-                  this.signIn();
+                  this.signInWithFormCredentials();
               }
-          },
-
-          setUserSigned: function(userSigned) {
-
-              $.cookie("email", userSigned.email);
-              $.cookie("password", this.form.password);
-
-              this.user = {
-                  id: userSigned.id,
-                  name: userSigned.name,
-                  email: userSigned.email,
-                  password: this.form.password,
-                  logged: true
-              };
-          },
-
-          clearMessages: function () {
-              this.infoMessage = "";
-              this.errorMessage = "";
           },
 
           // Sign In
@@ -122,14 +104,20 @@
               if (this.form.email == "" || this.form.password == "") {
                   this.errorMessage = "Please, enter email and password to sign in.";
               } else {
-                  var userToSignIn = {
-                      email: this.form.email,
-                      password: this.form.password
-                  };
-
-                  this.$.signInAjax.body = JSON.stringify(userToSignIn);
-                  this.$.signInAjax.go();
+                  this.encodeFormPassword();
+                  this.signInWithFormCredentials();
               }
+          },
+
+          signInWithFormCredentials: function () {
+
+              var userToSignIn = {
+                  email: this.form.email,
+                  password: this.form.encodedPassword
+              };
+
+              this.$.signInAjax.body = JSON.stringify(userToSignIn);
+              this.$.signInAjax.go();
           },
 
           userSignedIn: function() {
@@ -160,21 +148,27 @@
                   if (this.form.name == "" && this.form.email == "" || this.form.password == "") {
                       this.errorMessage = "Please, enter your name, email and password to sign up.";
                   } else {
-                      var userToSignUp = {
-                          name: this.form.name,
-                          email: this.form.email,
-                          password: this.form.password
-                      };
-
-                      console.log("User to sign up:", userToSignUp);
-
-                      this.$.signUpAjax.body = JSON.stringify(userToSignUp);
-                      this.$.signUpAjax.go();
+                      this.encodeFormPassword();
+                      this.signUpWithFormCredentials();
                   }
               } else {
                   this.signUpFieldsHidden = false;
                   this.infoMessage = "Please, enter also your name. Your friends will see this name.";
               }
+          },
+
+          signUpWithFormCredentials: function () {
+
+              var userToSignUp = {
+                  name: this.form.name,
+                  email: this.form.email,
+                  password: this.form.encodedPassword
+              };
+
+              console.log("userToSignUp", userToSignUp);
+
+              this.$.signUpAjax.body = JSON.stringify(userToSignUp);
+              this.$.signUpAjax.go();
           },
 
           userSignedUp: function() {
@@ -194,6 +188,31 @@
               } else {
                   this.errorMessage = "Ooops, something went wrong (status: " + status + "). Please, try again.";
               }
+          },
+
+          // Auxiliary methods
+
+          encodeFormPassword: function () {
+              this.form.encodedPassword = CryptoJS.SHA256(this.form.password).toString(CryptoJS.enc.Base64);
+          },
+
+          setUserSigned: function(userSigned) {
+
+              $.cookie("email", userSigned.email);
+              $.cookie("password", this.form.encodedPassword);
+
+              this.user = {
+                  id: userSigned.id,
+                  name: userSigned.name,
+                  email: userSigned.email,
+                  password: this.form.encodedPassword, // This value is not returned by the API
+                  logged: true
+              };
+          },
+
+          clearMessages: function () {
+              this.infoMessage = "";
+              this.errorMessage = "";
           }
       });
 
