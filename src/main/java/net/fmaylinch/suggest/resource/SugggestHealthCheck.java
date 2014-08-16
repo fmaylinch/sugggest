@@ -1,8 +1,8 @@
-package net.fmaylinch.suggest;
+package net.fmaylinch.suggest.resource;
 
 import com.hubspot.dropwizard.guice.InjectableHealthCheck;
 
-public class SuggestHealthCheck extends InjectableHealthCheck
+public class SugggestHealthCheck extends InjectableHealthCheck
 {
 	@Override
 	protected Result check() throws Exception {

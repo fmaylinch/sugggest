@@ -14,14 +14,14 @@ import net.fmaylinch.suggest.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SuggestApplication extends Application<SugggestConfiguration> {
+public class SugggestApplication extends Application<SugggestConfiguration> {
 
-	private static final Logger logger = LoggerFactory.getLogger(SuggestApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(SugggestApplication.class);
 
 	private GuiceBundle<SugggestConfiguration> guiceBundle;
 
 	public static void main(String[] args) throws Exception {
-		new SuggestApplication().run(args);
+		new SugggestApplication().run(args);
 	}
 
 	@Override
