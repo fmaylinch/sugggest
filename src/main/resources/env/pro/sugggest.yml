@@ -1,1 +1,7 @@
 mongoUrl: set-through-system-property
+
+--- # Necessary to put this to override it through system property
+server:
+  applicationConnectors:
+  - type: http
+    port: 8080
