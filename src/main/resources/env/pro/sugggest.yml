@@ -1,1 +1,6 @@
 mongoUrl: set-through-system-property
+
+server:
+  applicationConnectors:
+  - type: http
+    port: 8090
