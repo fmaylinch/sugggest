@@ -101,7 +101,7 @@
 
               this.clearMessages();
 
-              if (this.form.email == "" || this.form.password == "") {
+              if (this.form.email == "" || this.form.password == "") {
                   this.errorMessage = "Please, enter email and password to sign in.";
               } else {
                   this.encodeFormPassword();
@@ -145,7 +145,7 @@
 
               if (!this.signUpFieldsHidden)
               {
-                  if (this.form.name == "" && this.form.email == "" || this.form.password == "") {
+                  if (this.form.name == "" && this.form.email == "" || this.form.password == "") {
                       this.errorMessage = "Please, enter your name, email and password to sign up.";
                   } else {
                       this.encodeFormPassword();
