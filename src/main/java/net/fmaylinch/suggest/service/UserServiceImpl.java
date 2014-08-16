@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
 	public static final String FIELD_EMAIL = "email";
 	public static final String FIELD_PASSWORD = "password";
 	public static final String FIELD_FROM = "from";
+	public static final String FIELD_TO = "to";
 
 
 	private final Datastore ds;
@@ -66,16 +67,29 @@ public class UserServiceImpl implements UserService {
 
 		final User user = findById(userId);
 
-		if (user != null) {
+		if (user != null && !user.getEmail().equals(friendEmail))
+		{
 			final User friend = findByEmail(friendEmail);
 
-			if (friend != null) {
-				ds.save(new Friendship(user.getId(), friend.getId()));
+			if (friend != null)
+			{
+				if (!userHasFriend(user.getId(), friend.getId())) {
+					ds.save(new Friendship(user.getId(), friend.getId()));
+				}
+
 				return friend;
 			}
 		}
 
 		return null;
+	}
+
+	private boolean userHasFriend(String userId, String friendId) {
+
+		return ds.find(Friendship.class)
+				.filter(FIELD_FROM, userId)
+				.filter(FIELD_TO, friendId)
+				.countAll() > 0;
 	}
 
 	/** Returns the "to" users of these friendships */

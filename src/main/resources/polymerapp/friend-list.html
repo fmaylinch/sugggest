@@ -48,8 +48,7 @@
           </template>
 
           <template if="{{friends.length == 0}}">
-              <p>No friends yet. Add them!<p>
-              <p>(Tell them to sign up if they haven't)</p>
+              <p>Tell your friends to sign up and add them here.</p>
           </template>
 
       </div>
@@ -88,17 +87,20 @@
 
           friendAdded: function() {
 
-              console.log("Friend added", this.$.ajax.response);
+              var friend = this.$.ajax.response;
+              console.log("Friend added", friend);
               this.email = "";
               this.$.service.refresh();
-              // TODO: display toast or message
+
+              alert("Friend added: " + friend.name);
+              // TODO: display toast or dialog
           },
 
           addFriendFailed: function(event, detail) {
 
-              // TODO: display toast or message
+              // TODO: display toast or dialog
               if (detail.xhr.status == 404) {
-                  alert("there's no user with that email. Invite that friend!");
+                  alert("There's no user with that email. Invite that friend!");
               } else {
                   console.log("Ooops, something went wrong (status: " + detail.xhr.status + "). Please, try again.");
               }
