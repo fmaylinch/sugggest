@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.mongodb.morphia.annotations.Entity;
 
+import java.util.Comparator;
+
 @Entity(value = "users", noClassnameStored = true)
 public class User extends Model {
 
@@ -37,4 +39,11 @@ public class User extends Model {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public static final Comparator<? super User> NAME_COMPARATOR = new Comparator<User>() {
+		@Override
+		public int compare(User u1, User u2) {
+			return u1.getName().compareTo(u2.getName());
+		}
+	};
 }

@@ -9,6 +9,8 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Singleton
@@ -95,7 +97,7 @@ public class UserServiceImpl implements UserService {
 				.countAll() > 0;
 	}
 
-	/** Returns the "to" users of these friendships */
+	/** Returns the "to" users of these friendships and sorts by name */
 	private List<User> getToUsers(List<Friendship> friendships)
 	{
 		List<User> friends = new ArrayList<User>();
@@ -104,6 +106,8 @@ public class UserServiceImpl implements UserService {
 			final User user = findById(friendship.getTo());
 			friends.add(user);
 		}
+
+		Collections.sort(friends, User.NAME_COMPARATOR);
 
 		return friends;
 	}
