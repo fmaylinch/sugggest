@@ -13,11 +13,12 @@
       display: block;
       width: 100%;
     }
+
     #emailform {
         display: block;
-        position: relative;
         width: 100%;
     }
+
     friend-card {
       margin-bottom: 30px;
     }
@@ -32,19 +33,23 @@
                  handleAs="json">
       </core-ajax>
 
-      <friend-service id="service" user="{{user}}" friends="{{friends}}" done="{{done}}"></friend-service>
+      <friend-service id="service" user="{{user}}" friends="{{friends}}" done="{{friendsLoaded}}"></friend-service>
 
       <div layout vertical center>
 
           <div id="emailform">
               <div layout horizontal>
-                  <paper-input flex label="Email" value="{{email}}"></paper-input>
+                  <paper-input id="emailInput" flex
+                               label="Email to add or filter"
+                               value="{{email}}"
+                               on-input="{{emailInputChanged}}">
+                  </paper-input>
                   <paper-icon-button icon="add-circle" on-click="{{addFriend}}"></paper-icon-button>
               </div>
           </div>
 
-          <template if="{{done}}">
-              <template repeat="{{friend in friends}}">
+          <template if="{{friendsLoaded}}">
+              <template repeat="{{friend in filteredFriends}}">
                   <friend-card user="{{user}}" friend="{{friend}}">
                   </friend-card>
               </template>
@@ -54,7 +59,7 @@
               </template>
           </template>
 
-          <template if="{{!done}}">
+          <template if="{{!friendsLoaded}}">
               <loading-spinner></loading-spinner>
           </template>
 
@@ -66,9 +71,38 @@
 
       Polymer('friend-list', {
 
+          friendsLoaded: false,
+
           email: "",
 
-          done: false,
+          filteredFriends: [],
+
+          observe: {
+              friendsLoaded: 'updateFilteredFriends',
+              email: 'updateFilteredFriends'
+          },
+
+          emailInputChanged: function ()
+          {
+              // I don't know why but core/paper-input does not bind the value immediately.
+              // You have to hit enter or exit the field, or call commit() explicitly.
+              this.$.emailInput.commit();
+          },
+
+          updateFilteredFriends: function()
+          {
+              if (this.friendsLoaded)
+              {
+                  if (this.email == "") {
+                      this.filteredFriends = this.friends;
+                  } else {
+                      var email = this.email;
+                      this.filteredFriends = this.friends.filter(function (user) {
+                          return user.name.indexOf(email) >= 0 || user.email.indexOf(email) >= 0;
+                      });
+                  }
+              }
+          },
 
           ready: function () {
 
@@ -83,6 +117,8 @@
           },
 
           addFriend: function() {
+
+              console.log("Adding friend with email: " + this.email);
 
               if (this.email != "")
               {
