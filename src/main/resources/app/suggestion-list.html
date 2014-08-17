@@ -15,11 +15,11 @@
     }
     </style>
 
-      <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}" done="{{done}}"></suggestion-service>
+      <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}" done="{{suggestionsLoaded}}"></suggestion-service>
 
       <div layout vertical center>
 
-          <template if="{{done}}">
+          <template if="{{suggestionsLoaded}}">
               <template repeat="{{suggestion in suggestions}}">
                   <suggestion-card user="{{user}}" suggestion="{{suggestion}}"></suggestion-card>
               </template>
@@ -29,7 +29,7 @@
               </template>
           </template>
 
-          <template if="{{!done}}">
+          <template if="{{!suggestionsLoaded}}">
               <loading-spinner></loading-spinner>
           </template>
 
@@ -40,7 +40,7 @@
   <script>
 
       Polymer('suggestion-list', {
-          done: false
+          suggestionsLoaded: false
       });
 
   </script>
