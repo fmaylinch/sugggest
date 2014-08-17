@@ -1,0 +1,19 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+<link rel="import" href="components/paper-input/paper-input.html">
+
+<!--
+ I don't know why but core/paper-input don't bind the value immediately.
+ You have to hit enter or exit the field, or call commit() explicitly.
+-->
+
+<polymer-element name="auto-commit-paper-input" extends="paper-input" on-input="{{commit}}">
+
+    <template>
+        <shadow></shadow>
+    </template>
+
+    <script>
+        Polymer('auto-commit-paper-input', {});
+    </script>
+
+</polymer-element>

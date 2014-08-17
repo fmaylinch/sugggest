@@ -5,6 +5,7 @@
 <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="components/paper-input/paper-input.html">
 <link rel="import" href="loading-spinner.html">
+<link rel="import" href="auto-commit-paper-input.html">
 
 <polymer-element name="friend-list" attributes="user">
   <template>
@@ -39,11 +40,10 @@
 
           <div id="emailform">
               <div layout horizontal>
-                  <paper-input id="emailInput" flex
+                  <auto-commit-paper-input flex
                                label="Email to add or filter"
-                               value="{{email}}"
-                               on-input="{{emailInputChanged}}">
-                  </paper-input>
+                               value="{{email}}">
+                  </auto-commit-paper-input>
                   <paper-icon-button icon="add-circle" on-click="{{addFriend}}"></paper-icon-button>
               </div>
           </div>
@@ -80,13 +80,6 @@
           observe: {
               friendsLoaded: 'updateFilteredFriends',
               email: 'updateFilteredFriends'
-          },
-
-          emailInputChanged: function ()
-          {
-              // I don't know why but core/paper-input does not bind the value immediately.
-              // You have to hit enter or exit the field, or call commit() explicitly.
-              this.$.emailInput.commit();
           },
 
           updateFilteredFriends: function()
