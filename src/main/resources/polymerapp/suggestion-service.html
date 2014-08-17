@@ -1,7 +1,7 @@
 <link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="components/core-ajax/core-ajax.html">
 
-<polymer-element name="suggestion-service" attributes="user suggestions">
+<polymer-element name="suggestion-service" attributes="user suggestions done">
   <template>
     <style>
     :host {
@@ -32,9 +32,11 @@
             this.$.ajax.headers = JSON.stringify(headers);
         },
         suggestionsLoaded: function () {
+
             console.log("Suggestions loaded");
             // Make a copy of the loaded data
             this.suggestions = this.$.ajax.response.slice(0);
+            this.done = true;
         }
     });
   </script>

@@ -1,7 +1,7 @@
 <link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="components/core-ajax/core-ajax.html">
 
-<polymer-element name="friend-service" attributes="user friends">
+<polymer-element name="friend-service" attributes="user friends done">
   <template>
     <style>
     :host {
@@ -25,9 +25,11 @@
           this.$.ajax.headers = headers;
       },
       friendsLoaded: function () {
+
           console.log("Friends loaded");
           // Make a copy of the loaded data
           this.friends = this.$.ajax.response.slice(0);
+          this.done = true;
       },
       refresh: function () {
           this.$.ajax.go();

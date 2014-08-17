@@ -1,6 +1,7 @@
 ﻿<link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="suggestion-service.html">
 <link rel="import" href="suggestion-card.html">
+<link rel="import" href="loading-spinner.html">
 
 <polymer-element name="suggestion-list" attributes="user">
   <template>
@@ -14,19 +15,25 @@
     }
     </style>
 
-      <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}"></suggestion-service>
+      <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}" done="{{done}}"></suggestion-service>
 
       <div layout vertical center>
 
-          <template repeat="{{suggestion in suggestions}}">
-              <suggestion-card>
-                  <h2>{{suggestion.fromName}}:</h2>
-                  <p>{{suggestion.text}}</p>
-              </suggestion-card>
+          <template if="{{done}}">
+              <template repeat="{{suggestion in suggestions}}">
+                  <suggestion-card>
+                      <h2>{{suggestion.fromName}}:</h2>
+                      <p>{{suggestion.text}}</p>
+                  </suggestion-card>
+              </template>
+
+              <template if="{{suggestions.length == 0}}">
+                  <p>Tell someone to add you as a friend and suggest something to you.</p>
+              </template>
           </template>
 
-          <template if="{{suggestions.length == 0}}">
-              <p>Tell someone to add you as a friend and suggest something to you.</p>
+          <template if="{{!done}}">
+              <loading-spinner></loading-spinner>
           </template>
 
       </div>
@@ -35,7 +42,9 @@
 
   <script>
 
-      Polymer({});
+      Polymer('suggestion-list', {
+          done: false
+      });
 
   </script>
 

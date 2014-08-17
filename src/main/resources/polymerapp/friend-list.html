@@ -4,6 +4,7 @@
 <link rel="import" href="components/core-icons/core-icons.html">
 <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="components/paper-input/paper-input.html">
+<link rel="import" href="loading-spinner.html">
 
 <polymer-element name="friend-list" attributes="user">
   <template>
@@ -31,7 +32,7 @@
                  handleAs="json">
       </core-ajax>
 
-      <friend-service id="service" user="{{user}}" friends="{{friends}}"></friend-service>
+      <friend-service id="service" user="{{user}}" friends="{{friends}}" done="{{done}}"></friend-service>
 
       <div layout vertical center>
 
@@ -42,13 +43,19 @@
               </div>
           </div>
 
-          <template repeat="{{friend in friends}}">
-              <friend-card user="{{user}}" friend="{{friend}}">
-              </friend-card>
+          <template if="{{done}}">
+              <template repeat="{{friend in friends}}">
+                  <friend-card user="{{user}}" friend="{{friend}}">
+                  </friend-card>
+              </template>
+
+              <template if="{{friends.length == 0}}">
+                  <p>Tell your friends to sign up and add them here.</p>
+              </template>
           </template>
 
-          <template if="{{friends.length == 0}}">
-              <p>Tell your friends to sign up and add them here.</p>
+          <template if="{{!done}}">
+              <loading-spinner></loading-spinner>
           </template>
 
       </div>
@@ -60,6 +67,8 @@
       Polymer('friend-list', {
 
           email: "",
+
+          done: false,
 
           ready: function () {
 
