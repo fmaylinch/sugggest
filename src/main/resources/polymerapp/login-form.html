@@ -2,6 +2,7 @@
 <link rel="import" href="components/paper-input/paper-input.html">
 <link rel="import" href="components/paper-button/paper-button.html">
 <link rel="import" href="components/core-ajax/core-ajax.html">
+<link rel="import" href="loading-spinner.html">
 
 <polymer-element name="login-form" attributes="user">
   <template>
@@ -58,11 +59,17 @@
               <span id="info">{{infoMessage}}</span>
           </div>
 
-          <paper-input label="Name" value="{{form.name}}" hidden?="{{signUpFieldsHidden}}"></paper-input>
-          <paper-input label="Email" value="{{form.email}}"></paper-input>
-          <paper-input label="Password" value="{{form.password}}" type="password"></paper-input>
-          <paper-button raisedButton class="signin" label="Sign In" on-click="{{signIn}}"></paper-button>
-          <paper-button raisedButton class="signup" label="Sign Up" on-click="{{signUp}}"></paper-button>
+          <template if="{{doneWithAutoLogin}}">
+              <paper-input label="Name" value="{{form.name}}" hidden?="{{signUpFieldsHidden}}"></paper-input>
+              <paper-input label="Email" value="{{form.email}}"></paper-input>
+              <paper-input label="Password" value="{{form.password}}" type="password"></paper-input>
+              <paper-button raisedButton class="signin" label="Sign In" on-click="{{signIn}}"></paper-button>
+              <paper-button raisedButton class="signup" label="Sign Up" on-click="{{signUp}}"></paper-button>
+          </template>
+
+          <template if="{{!doneWithAutoLogin}}">
+              <loading-spinner></loading-spinner>
+          </template>
 
       </div>
     
@@ -71,6 +78,8 @@
   <script>
 
       Polymer('login-form', {
+
+          doneWithAutoLogin: false,
 
           signUpFieldsHidden: true,
 
@@ -89,6 +98,8 @@
               if (this.form.email && this.form.encodedPassword) {
                   console.log("Auto sign in");
                   this.signInWithFormCredentials();
+              } else {
+                  this.doneWithAutoLogin = true;
               }
           },
 
@@ -122,18 +133,25 @@
 
           userSignedIn: function() {
 
+              this.doneWithAutoLogin = true;
               var userSigned = this.$.signInAjax.response;
               this.setUserSigned(userSigned);
           },
 
           signInFailed: function(event, detail) {
 
-              var status = detail.xhr.status;
+              if (this.doneWithAutoLogin)
+              {
+                  var status = detail.xhr.status;
 
-              if (status == 401) {
-                  this.errorMessage = "Sorry, email or password are wrong."
+                  if (status == 401) {
+                      this.errorMessage = "Sorry, email or password are wrong."
+                  } else {
+                      this.errorMessage = "Ooops, something went wrong (status: " + status + "). Please, try again.";
+                  }
               } else {
-                  this.errorMessage = "Ooops, something went wrong (status: " + status + "). Please, try again.";
+                  // Don't display messages when doing auto login
+                  this.doneWithAutoLogin = true;
               }
           },
 
