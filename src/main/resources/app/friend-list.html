@@ -96,9 +96,10 @@
                   if (this.email == "") {
                       this.filteredFriends = this.friends;
                   } else {
-                      var email = this.email;
+                      var email = this.email.toLowerCase();
                       this.filteredFriends = this.friends.filter(function (user) {
-                          return user.name.indexOf(email) >= 0 || user.email.indexOf(email) >= 0;
+                          return user.name.toLowerCase().indexOf(email) >= 0 ||
+                                  user.email.toLowerCase().indexOf(email) >= 0;
                       });
                   }
               }
