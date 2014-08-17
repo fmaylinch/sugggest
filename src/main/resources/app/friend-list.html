@@ -84,14 +84,20 @@
 
           addFriend: function() {
 
-              var friend = {
-                  email: this.email
-              };
+              if (this.email != "")
+              {
+                  var friend = {
+                      email: this.email
+                  };
 
-              console.log("Adding friend: ", friend);
+                  console.log("Adding friend: ", friend);
 
-              this.$.ajax.body = JSON.stringify(friend);
-              this.$.ajax.go();
+                  this.$.ajax.body = JSON.stringify(friend);
+                  this.$.ajax.go();
+
+              } else {
+                  alert("Enter an email to add a friend.");
+              }
           },
 
           friendAdded: function() {

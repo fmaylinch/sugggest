@@ -163,7 +163,7 @@
 
               if (!this.signUpFieldsHidden)
               {
-                  if (this.form.name == "" && this.form.email == "" || this.form.password == "") {
+                  if (this.form.name == "" || this.form.email == "" || this.form.password == "") {
                       this.errorMessage = "Please, enter your name, email and password to sign up.";
                   } else {
                       this.encodeFormPassword();
