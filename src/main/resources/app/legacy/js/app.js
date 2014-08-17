@@ -6,12 +6,16 @@
     {
         $routeProvider.
                 when('/', {
-                    templateUrl: '/partials/suggestions.html',
+                    templateUrl: '/legacy/partials/suggestions.html',
                     controller: 'SuggestionCtrl'
                 }).
                 when('/friends', {
-                    templateUrl: '/partials/friends.html',
+                    templateUrl: '/legacy/partials/friends.html',
                     controller: 'FriendCtrl'
+                }).
+                when('/you', {
+                    templateUrl: '/legacy/partials/you.html',
+                    controller: 'YouCtrl'
                 }).
                 otherwise({
                     redirectTo: '/'

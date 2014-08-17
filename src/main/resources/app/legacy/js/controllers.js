@@ -6,13 +6,14 @@
             ['$scope', '$http', 'Base64', function($scope, $http, Base64)
     {
         var user = {
-            name: "David",
-            email: "dlopezsu@gmail.com",
-            id: "53e54e4f03640e6f7ce94134"
+            name: "Ferran",
+            email: "ferranmaylinch@gmail.com",
+            password: "WZRHGrsBESr8wYFZ9sx0tPURuZgG2lmzyvWpwXPKz8U=",
+            id: "11111"
         };
 
         $http.defaults.headers.common['Authorization'] =
-            'Basic ' + Base64.encode(user.email + ':' + '67890'); // TODO: pwd
+            'Basic ' + Base64.encode(user.email + ':' + user.password);
 
         $scope.user = user;
     }]);
@@ -22,7 +23,8 @@
     {
         $scope.sections = [
             { name:"Suggestions", url:"#/" },
-            { name:"Friends", url:"#/friends" }
+            { name:"Friends", url:"#/friends" },
+            { name:"you", url:"#/you" }
         ];
 
         $scope.currentSection = $scope.sections[0];
@@ -64,6 +66,12 @@
             .success(function(friends) {
                 $scope.friends = friends;
             });
+    }]);
+
+    app.controller('YouCtrl',
+
+            ['$scope', '$http', '$log', function($scope, $http, $log) {
+
     }]);
 
 })();
