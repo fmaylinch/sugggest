@@ -18,4 +18,7 @@ public interface SuggestionService
 
 	/** Get suggestions by "target" user, sorted by updated date (newest first). */
 	List<Suggestion> findByUserFrom(String userFromId);
+
+	/** Get suggestions with the user (as from or to), sorted by updated date (newest first). */
+	List<Suggestion> findByUserFromOrTo(String userId);
 }

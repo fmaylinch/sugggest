@@ -1,14 +1,14 @@
 ﻿<link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="components/paper-shadow/paper-shadow.html">
 
-<polymer-element name="suggestion-card">
+<polymer-element name="suggestion-card" attributes="user suggestion">
   <template>
     <style>
     :host {
       display: block;
       position: relative;
       background-color: white;
-      padding: 20px;
+      padding: 0 20px 0 20px;
       width: 100%;
       font-size: 1.2rem;
       font-weight: 300;
@@ -17,34 +17,36 @@
       margin-bottom: 10px;
     }
 
-    polyfill-next-selector { content: '.card-header h2'; }
-    .card-header ::content h2 {
+    polyfill-next-selector { content: '.card-header h3'; }
+    .card-header ::content h3 {
         margin: 0;
-        font-size: 1.5rem;
-        font-weight: 400;
+        font-size: 1.0rem;
+        font-weight: 300;
     }
-    polyfill-next-selector { content: '.card-header img'; }
-    .card-header ::content img {
-        display: none;
-        width: 70px;
-        border-radius: 50%;
-        margin: 10px;
-    }
-
     </style>
 
     <paper-shadow z="1">
         <div class="card-header" layout horizontal center>
-            <content select="h2"></content>
+            <template if="{{user.id == suggestion.fromId}}">
+                <h3 style="color:grey">From you to {{suggestion.toName}}:</h3>
+            </template>
+            <template if="{{user.id != suggestion.fromId}}">
+                <h3>From {{suggestion.fromName}} to you:</h3>
+            </template>
         </div>
-
-        <content></content>
+        <p>{{suggestion.text}}</p>
     </paper-shadow>
 
   </template>
   <script>
 
-      Polymer({});
+      Polymer('suggestion-card', {
+
+          ready: function() {
+
+              // TODO: Set different colors depending on {{user.id == suggestion.fromId}}
+          }
+      });
 
   </script>
 </polymer-element>

@@ -5,6 +5,8 @@ public class SuggestionDTO extends Model {
 	private String text;
 	private String fromName;
 	private String fromId;
+	private String toName;
+	private String toId;
 
 
 	public String getText() {
@@ -29,5 +31,21 @@ public class SuggestionDTO extends Model {
 
 	public void setFromId(String fromId) {
 		this.fromId = fromId;
+	}
+
+	public String getToName() {
+		return toName;
+	}
+
+	public void setToName(String toName) {
+		this.toName = toName;
+	}
+
+	public String getToId() {
+		return toId;
+	}
+
+	public void setToId(String toId) {
+		this.toId = toId;
 	}
 }

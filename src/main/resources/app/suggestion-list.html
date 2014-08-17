@@ -21,10 +21,7 @@
 
           <template if="{{done}}">
               <template repeat="{{suggestion in suggestions}}">
-                  <suggestion-card>
-                      <h2>{{suggestion.fromName}}:</h2>
-                      <p>{{suggestion.text}}</p>
-                  </suggestion-card>
+                  <suggestion-card user="{{user}}" suggestion="{{suggestion}}"></suggestion-card>
               </template>
 
               <template if="{{suggestions.length == 0}}">

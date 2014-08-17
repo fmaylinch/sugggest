@@ -1,5 +1,6 @@
 package net.fmaylinch.suggest.resource;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.dropwizard.auth.Auth;
@@ -8,6 +9,7 @@ import net.fmaylinch.suggest.model.SuggestionDTO;
 import net.fmaylinch.suggest.model.User;
 import net.fmaylinch.suggest.service.SuggestionService;
 import net.fmaylinch.suggest.service.UserService;
+import net.fmaylinch.suggest.util.UserCache;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Path("suggestions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -31,32 +34,30 @@ public class SuggestionResource {
 		this.userService = userService;
 	}
 
+	@GET
+	public Response findByUserFromOrTo(@Auth User user) {
+
+		final List<Suggestion> suggestions = suggestionService.findByUserFromOrTo(user.getId());
+
+		return Response.ok(convertToDTOs(suggestions)).build();
+	}
+
 	@Path("to")
 	@GET
 	public Response findByUserTo(@Auth User user) {
 
 		final List<Suggestion> suggestions = suggestionService.findByUserTo(user.getId());
 
-		final List<SuggestionDTO> suggestionDtos = new ArrayList<SuggestionDTO>();
-
-		for (Suggestion suggestion : suggestions)
-		{
-			SuggestionDTO dto = new SuggestionDTO();
-			dto.setText(suggestion.getText());
-			dto.setFromId(suggestion.getFrom());
-			dto.setFromName(userService.findById(suggestion.getFrom()).getName());
-
-			suggestionDtos.add(dto);
-		}
-
-		return Response.ok(suggestionDtos).build();
+		return Response.ok(convertToDTOs(suggestions)).build();
 	}
 
 	@Path("from")
 	@GET
 	public Response findByUserFrom(@Auth User user) {
 
-		return Response.ok(suggestionService.findByUserFrom(user.getId())).build();
+		final List<Suggestion> suggestions = suggestionService.findByUserFrom(user.getId());
+
+		return Response.ok(convertToDTOs(suggestions)).build();
 	}
 
 	@POST
@@ -79,5 +80,34 @@ public class SuggestionResource {
 		suggestionService.create(suggestion);
 
 		return Response.ok(suggestion).build();
+	}
+
+
+	private List<SuggestionDTO> convertToDTOs(List<Suggestion> suggestions)
+	{
+		final UserCache userCache = new UserCache(userService);
+
+		final List<SuggestionDTO> suggestionDtos = new ArrayList<SuggestionDTO>();
+
+		for (Suggestion suggestion : suggestions)
+		{
+			SuggestionDTO dto = convertToDto(suggestion, userCache);
+
+			suggestionDtos.add(dto);
+		}
+		return suggestionDtos;
+	}
+
+	private SuggestionDTO convertToDto(Suggestion suggestion, UserCache userCache)
+	{
+		SuggestionDTO dto = new SuggestionDTO();
+		dto.setText(suggestion.getText());
+
+		dto.setFromId(suggestion.getFrom());
+		dto.setFromName(userCache.findById(suggestion.getFrom()).getName());
+		dto.setToId(suggestion.getId());
+		dto.setToName(userCache.findById(suggestion.getTo()).getName());
+
+		return dto;
 	}
 }
