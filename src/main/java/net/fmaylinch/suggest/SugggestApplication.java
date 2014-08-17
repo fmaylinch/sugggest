@@ -31,8 +31,7 @@ public class SugggestApplication extends Application<SugggestConfiguration> {
 	@Override
 	public void initialize(Bootstrap<SugggestConfiguration> bootstrap) {
 
-//		bootstrap.addBundle(new AssetsBundle("/app/", "/"));
-		bootstrap.addBundle(new AssetsBundle("/polymerapp/", "/"));
+		bootstrap.addBundle(new AssetsBundle("/app/", "/"));
 
 		guiceBundle = GuiceBundle.<SugggestConfiguration>newBuilder()
 				.addModule(new SugggestModule(null))
