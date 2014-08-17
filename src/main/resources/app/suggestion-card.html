@@ -13,25 +13,23 @@
       font-size: 1.2rem;
       font-weight: 300;
     }
-    .card-header {
-      margin-bottom: 10px;
+
+    .from-you {
+        color: grey;
+    }
+    .to-you {
+        color: #0095e7;
     }
 
-    polyfill-next-selector { content: '.card-header h3'; }
-    .card-header ::content h3 {
-        margin: 0;
-        font-size: 1.0rem;
-        font-weight: 300;
-    }
     </style>
 
     <paper-shadow z="1">
-        <div class="card-header" layout horizontal center>
+        <div class="card-header">
             <template if="{{user.id == suggestion.fromId}}">
-                <h3 style="color:grey">From you to {{suggestion.toName}}:</h3>
+                <p class="from-you">From you to {{suggestion.toName}}:</p>
             </template>
             <template if="{{user.id != suggestion.fromId}}">
-                <h3>From {{suggestion.fromName}} to you:</h3>
+                <p class="to-you">From {{suggestion.fromName}} to you:</p>
             </template>
         </div>
         <p>{{suggestion.text}}</p>
