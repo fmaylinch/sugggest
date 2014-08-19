@@ -5,6 +5,7 @@
 <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="loading-spinner.html">
 <link rel="import" href="auto-commit-paper-input.html">
+<link rel="import" href="rest-util.html">
 
 <polymer-element name="friend-list" attributes="user">
   <template>
@@ -24,6 +25,8 @@
     }
 
     </style>
+
+      <rest-util id="restUtil"></rest-util>
 
       <core-ajax id="ajax"
                  method="POST" url="/api/users/friends"
@@ -109,15 +112,7 @@
 
                   console.log("Adding friend: ", friend);
 
-                  var headers = {
-                      Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
-                  };
-
-                  console.log("user", this.user);
-                  console.log("header for adding friend", JSON.stringify(headers));
-
-                  this.$.ajax.headers = JSON.stringify(headers);
-
+                  this.$.ajax.headers = this.$.restUtil.getHeaders(this.user);
                   this.$.ajax.body = JSON.stringify(friend);
                   this.$.ajax.go();
 

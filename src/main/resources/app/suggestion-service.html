@@ -1,5 +1,6 @@
 <link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="components/core-ajax/core-ajax.html">
+<link rel="import" href="rest-util.html">
 
 <polymer-element name="suggestion-service" attributes="user suggestions done">
   <template>
@@ -10,7 +11,9 @@
     }
     </style>
 
-    <core-ajax id="ajax"
+      <rest-util id="restUtil"></rest-util>
+
+      <core-ajax id="ajax"
       url="/api/suggestions"
       on-core-response="{{suggestionsLoaded}}"
       handleAs="json">
@@ -27,14 +30,7 @@
         userChanged: function() {
 
             if (this.user.logged) {
-
-                var headers = { Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password) };
-
-                console.log("user", this.user);
-                console.log("header for suggestions", JSON.stringify(headers));
-
-                this.$.ajax.headers = JSON.stringify(headers);
-
+                this.$.ajax.headers = this.$.restUtil.getHeaders(this.user);
                 this.$.ajax.go();
             }
         },

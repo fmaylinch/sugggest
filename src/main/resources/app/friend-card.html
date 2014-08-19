@@ -3,6 +3,7 @@
 <link rel="import" href="components/core-icons/core-icons.html">
 <link rel="import" href="components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="components/paper-input/paper-input.html">
+<link rel="import" href="rest-util.html">
 
 <polymer-element name="friend-card" attributes="user friend send suggestion">
   <template>
@@ -33,6 +34,8 @@
         fill: #636363;
     }
     </style>
+
+      <rest-util id="restUtil"></rest-util>
 
       <core-ajax id="ajax"
                  method="POST" url="/api/suggestions"
@@ -76,9 +79,7 @@
 
               console.log("Sending suggestion: ", suggestion);
 
-              var headers = { Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password) };
-
-              this.$.ajax.headers = JSON.stringify(headers);
+              this.$.ajax.headers = this.$.restUtil.getHeaders(this.user);
               this.$.ajax.body = JSON.stringify(suggestion);
               this.$.ajax.go();
           },

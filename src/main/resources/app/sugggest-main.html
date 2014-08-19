@@ -100,8 +100,7 @@
                  this.user = detail;
                  console.log("User signed in from login:", this.user);
                  this.user.logged = true;
-                 this.$.tabs.selected = "suggestions";
-                 // triggered?: this.$.pages.selected = this.PAGES.suggestions;
+                 this.$.tabs.selected = "suggestions"; // Select tab (will change page too)
              },
 
              userSignedOut: function() {

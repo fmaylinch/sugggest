@@ -1,0 +1,28 @@
+﻿<link rel="import" href="components/polymer/polymer.html">
+
+<polymer-element name="rest-util">
+  <template>
+    <style>
+        :host {
+            display: none;
+        }
+    </style>
+  </template>
+
+  <script>
+
+      Polymer('rest-util', {
+
+          getHeaders: function (user) {
+
+              var headers = {
+                  Authorization: "Basic " + btoa(user.email + ":" + user.password)
+              };
+
+              return JSON.stringify(headers);
+          }
+      });
+
+  </script>
+
+</polymer-element>
