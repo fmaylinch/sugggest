@@ -66,18 +66,6 @@
 
           suggestion: "",
 
-          ready: function () {
-
-              var headers = {
-                  Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
-              };
-
-              console.log("user", this.user);
-              console.log("header for sending suggestion", JSON.stringify(headers));
-
-              this.$.ajax.headers = JSON.stringify(headers);
-          },
-
           sendSuggestion: function() {
 
               var suggestion = {
@@ -88,6 +76,9 @@
 
               console.log("Sending suggestion: ", suggestion);
 
+              var headers = { Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password) };
+
+              this.$.ajax.headers = JSON.stringify(headers);
               this.$.ajax.body = JSON.stringify(suggestion);
               this.$.ajax.go();
           },

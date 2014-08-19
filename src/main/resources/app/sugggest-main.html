@@ -1,6 +1,7 @@
 ﻿<link rel="import" href="components/polymer/polymer.html">
 <link rel="import" href="components/core-header-panel/core-header-panel.html">
 <link rel="import" href="components/core-toolbar/core-toolbar.html">
+<link rel="import" href="components/core-pages/core-pages.html">
 <link rel="import" href="components/paper-tabs/paper-tabs.html">
 <link rel="import" href="suggestion-list.html">
 <link rel="import" href="friend-list.html">
@@ -33,6 +34,9 @@
             width: 80%;
             margin: 50px auto;
         }
+        core-pages {
+            width: 100%;
+        }
 
         @media (min-width: 481px) {
 /*
@@ -56,7 +60,7 @@
                   <h2>Sugggest</h2>
               </template>
 
-              <paper-tabs id="tabs" self-end>
+              <paper-tabs id="tabs" on-core-select="{{tabSelected}}" self-end>
                   <template if="{{user.logged}}">
                       <paper-tab name="suggestions">Suggestions</paper-tab>
                       <paper-tab name="friends">Friends</paper-tab>
@@ -69,21 +73,12 @@
           <!-- Main content  -->
           <div class="container" layout vertical center>
 
-              <template if="{{user.logged}}">
-                  <template if="{{tab == 'suggestions'}}">
-                      <suggestion-list user="{{user}}"</suggestion-list>
-                  </template>
-                  <template if="{{tab == 'friends'}}">
-                      <friend-list user="{{user}}"</friend-list>
-                  </template>
-                  <template if="{{tab == 'options'}}">
-                      <options-form user="{{user}}"</options-form>
-                  </template>
-              </template>
-
-              <template if="{{!user.logged}}">
-                  <login-form user="{{user}}"></login-form>
-              </template>
+              <core-pages id="pages" selected="0">
+                  <login-form on-user-login="{{userSignedIn}}"></login-form>
+                  <suggestion-list user="{{user}}"></suggestion-list>
+                  <friend-list user="{{user}}"></friend-list>
+                  <options-form user="{{user}}" on-user-logout="{{userSignedOut}}"></options-form>
+              </core-pages>
 
           </div>
 
@@ -94,27 +89,38 @@
     <script>
          Polymer('sugggest-main', {
 
-             user: {id: "NONE"},
-
-             tab: "",
-
-             ready: function() {
-
-                 var that = this;
-
-                 var tabs = this.$.tabs;
-
-                 tabs.addEventListener('core-select', function() {
-                     console.log("Selected: " + tabs.selected);
-                     that.tab = tabs.selected;
-                 });
-
-                 tabs.selected = "suggestions";
+             PAGES: {
+                 login: 0, suggestions: 1, friends: 2, options: 3
              },
 
-             jsonify: function(user) {
-                 console.log("User changed");
-                 return JSON.stringify(user);
+             user: {},
+
+             userSignedIn: function(ev, detail) {
+
+                 this.user = detail;
+                 console.log("User signed in from login:", this.user);
+                 this.user.logged = true;
+                 this.$.tabs.selected = "suggestions";
+                 // triggered?: this.$.pages.selected = this.PAGES.suggestions;
+             },
+
+             userSignedOut: function() {
+
+                 console.log("User signed out from options");
+                 this.$.pages.selected = this.PAGES.login;
+                 this.user = {};
+             },
+
+             tabSelected: function(ev, detail) {
+
+                 var tabSelected = this.$.tabs.selected;
+                 console.log("Selected:", tabSelected);
+                 console.log("Is selected:", detail.isSelected);
+                 console.log("Item:", detail.item);
+
+                 if (detail.isSelected) {
+                     this.$.pages.selected = this.PAGES[tabSelected];
+                 }
              }
          });
     </script>

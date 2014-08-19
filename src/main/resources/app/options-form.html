@@ -2,6 +2,10 @@
 <link rel="import" href="components/paper-button/paper-button.html">
 <link rel="import" href="friend-card.html">
 
+<!--
+When the user logs out it fires the event 'user-logout'
+-->
+
 <polymer-element name="options-form" attributes="user">
   <template>
     <style>
@@ -40,7 +44,8 @@
 
               $.removeCookie("email");
               $.removeCookie("password");
-              this.user.logged = false;
+
+              this.fire('user-logout');
           }
       });
 

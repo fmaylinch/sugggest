@@ -3,27 +3,36 @@
 
 <polymer-element name="friend-service" attributes="user friends done">
   <template>
+
     <style>
     :host {
       display: none;
     }
     </style>
+
     <core-ajax id="ajax"
-      auto
       url="/api/users/friends"
       on-core-response="{{friendsLoaded}}"
       handleAs="json">
     </core-ajax>
+
   </template>
   <script>
   Polymer('friend-service', {
+
       created: function () {
           this.friends = [];
       },
-      ready: function () {
-          var headers = '{"Authorization": "Basic ' + btoa(this.user.email + ':' + this.user.password) + '"}';
-          this.$.ajax.headers = headers;
+
+      userChanged: function()
+      {
+          if (this.user.logged) {
+              var headers = '{"Authorization": "Basic ' + btoa(this.user.email + ':' + this.user.password) + '"}';
+              this.$.ajax.headers = headers;
+              this.$.ajax.go();
+          }
       },
+
       friendsLoaded: function () {
 
           console.log("Friends loaded");
@@ -31,6 +40,7 @@
           this.friends = this.$.ajax.response.slice(0);
           this.done = true;
       },
+
       refresh: function () {
           this.$.ajax.go();
       }

@@ -97,18 +97,6 @@
               }
           },
 
-          ready: function () {
-
-              var headers = {
-                  Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
-              };
-
-              console.log("user", this.user);
-              console.log("header for adding friend", JSON.stringify(headers));
-
-              this.$.ajax.headers = JSON.stringify(headers);
-          },
-
           addFriend: function() {
 
               console.log("Adding friend with email: " + this.email);
@@ -120,6 +108,15 @@
                   };
 
                   console.log("Adding friend: ", friend);
+
+                  var headers = {
+                      Authorization: "Basic " + btoa(this.user.email + ":" + this.user.password)
+                  };
+
+                  console.log("user", this.user);
+                  console.log("header for adding friend", JSON.stringify(headers));
+
+                  this.$.ajax.headers = JSON.stringify(headers);
 
                   this.$.ajax.body = JSON.stringify(friend);
                   this.$.ajax.go();

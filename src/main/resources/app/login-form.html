@@ -4,7 +4,11 @@
 <link rel="import" href="components/core-ajax/core-ajax.html">
 <link rel="import" href="loading-spinner.html">
 
-<polymer-element name="login-form" attributes="user">
+<!--
+    When the user signs in/up it fires the event 'user-login' with the user
+-->
+
+<polymer-element name="login-form">
   <template>
     <style>
     :host {
@@ -219,13 +223,16 @@
               $.cookie("email", userSigned.email);
               $.cookie("password", this.form.encodedPassword);
 
-              this.user = {
+              var user = {
                   id: userSigned.id,
                   name: userSigned.name,
                   email: userSigned.email,
-                  password: this.form.encodedPassword, // This value is not returned by the API
-                  logged: true
+                  password: this.form.encodedPassword // This value is not returned by the API
               };
+
+              console.log("Firing user-login with user:", user);
+
+              this.fire("user-login", user);
           },
 
           clearMessages: function () {
