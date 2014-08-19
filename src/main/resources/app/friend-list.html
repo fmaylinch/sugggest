@@ -13,6 +13,7 @@
     :host {
       display: block;
       width: 100%;
+      padding-top: 30px;
     }
 
     #emailform {
@@ -124,11 +125,10 @@
           friendAdded: function() {
 
               var friend = this.$.ajax.response;
-              console.log("Friend added", friend);
               this.email = "";
               this.$.service.refresh();
 
-              alert("Friend added: " + friend.name);
+              alert("Your friend " + friend.name + " was added!");
               // TODO: display toast or dialog
           },
 

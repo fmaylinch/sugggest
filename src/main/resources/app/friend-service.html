@@ -29,9 +29,11 @@
 
       userChanged: function()
       {
+          console.log("User changed, so we may need to load friends");
+
           if (this.user.logged) {
               this.$.ajax.headers = this.$.restUtil.getHeaders(this.user);
-              this.$.ajax.go();
+              this.refresh();
           }
       },
 
@@ -44,6 +46,7 @@
       },
 
       refresh: function () {
+          this.done = false;
           this.$.ajax.go();
       }
   });

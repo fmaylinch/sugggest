@@ -13,11 +13,16 @@
     suggestion-card {
       margin-bottom: 30px;
     }
+    #hint {
+        color: grey;
+    }
     </style>
 
       <suggestion-service id="service" user="{{user}}" suggestions="{{suggestions}}" done="{{suggestionsLoaded}}"></suggestion-service>
 
       <div layout vertical center>
+
+          <p id="hint">(Reload page to refresh suggestions)</p>
 
           <template if="{{suggestionsLoaded}}">
               <template repeat="{{suggestion in suggestions}}">
@@ -40,7 +45,12 @@
   <script>
 
       Polymer('suggestion-list', {
-          suggestionsLoaded: false
+
+          suggestionsLoaded: false,
+
+          refresh: function() {
+              this.$.service.refresh();
+          }
       });
 
   </script>

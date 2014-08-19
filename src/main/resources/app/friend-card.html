@@ -5,6 +5,10 @@
 <link rel="import" href="components/paper-input/paper-input.html">
 <link rel="import" href="rest-util.html">
 
+<!--
+    The event 'suggestion-sent' is fired when a suggestion is sent.
+-->
+
 <polymer-element name="friend-card" attributes="user friend send suggestion">
   <template>
     <style>
@@ -87,9 +91,7 @@
           suggestionPosted: function() {
 
               this.suggestion = "";
-
-              alert("Suggestion sent! You will see it in the suggestions tab.");
-              // TODO: display toast or message
+              this.fire('suggestion-sent');
           },
 
           signInFailed: function(event, detail) {

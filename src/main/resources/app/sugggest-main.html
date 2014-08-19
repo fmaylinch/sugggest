@@ -32,7 +32,7 @@
         }
         .container {
             width: 80%;
-            margin: 50px auto;
+            margin: 0 auto;
         }
         core-pages {
             width: 100%;
@@ -75,8 +75,8 @@
 
               <core-pages id="pages" selected="0">
                   <login-form on-user-login="{{userSignedIn}}"></login-form>
-                  <suggestion-list user="{{user}}"></suggestion-list>
-                  <friend-list user="{{user}}"></friend-list>
+                  <suggestion-list id="suggestionList" user="{{user}}"></suggestion-list>
+                  <friend-list on-suggestion-sent="{{suggestionAdded}}" user="{{user}}"></friend-list>
                   <options-form user="{{user}}" on-user-logout="{{userSignedOut}}"></options-form>
               </core-pages>
 
@@ -94,6 +94,12 @@
              },
 
              user: {},
+
+             suggestionAdded: function() {
+
+                 this.$.tabs.selected = "suggestions";
+                 this.$.suggestionList.refresh();
+             },
 
              userSignedIn: function(ev, detail) {
 
@@ -113,9 +119,6 @@
              tabSelected: function(ev, detail) {
 
                  var tabSelected = this.$.tabs.selected;
-                 console.log("Selected:", tabSelected);
-                 console.log("Is selected:", detail.isSelected);
-                 console.log("Item:", detail.item);
 
                  if (detail.isSelected) {
                      this.$.pages.selected = this.PAGES[tabSelected];
