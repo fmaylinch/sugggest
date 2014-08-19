@@ -2,6 +2,7 @@
 <link rel="import" href="suggestion-service.html">
 <link rel="import" href="suggestion-card.html">
 <link rel="import" href="loading-spinner.html">
+<link rel="import" href="components/paper-button/paper-button.html">
 
 <polymer-element name="suggestion-list" attributes="user">
   <template>
@@ -13,8 +14,10 @@
     suggestion-card {
       margin-bottom: 30px;
     }
-    #hint {
-        color: grey;
+    #refresh {
+        margin: 10px;
+        font-size: 75%;
+        color: dimgrey;
     }
     </style>
 
@@ -22,7 +25,7 @@
 
       <div layout vertical center>
 
-          <p id="hint">(Reload page to refresh suggestions)</p>
+          <paper-button id="refresh" raisedButton label="refresh" on-click="{{refresh}}"></paper-button>
 
           <template if="{{suggestionsLoaded}}">
               <template repeat="{{suggestion in suggestions}}">
