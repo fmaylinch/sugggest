@@ -24,6 +24,11 @@ When the user logs out it fires the event 'user-logout'
         color: #fff;
     }
 
+    #devInfo {
+        color: grey;
+        margin-top: 50px;
+    }
+
     </style>
 
       <div layout vertical center>
@@ -32,6 +37,20 @@ When the user logs out it fires the event 'user-logout'
           </friend-card>
 
           <paper-button raisedButton class="colored" label="Log Out" on-tap="{{logout}}"></paper-button>
+
+          <div id="devInfo">
+              <h4>Latest changes</h4>
+              <ul>
+                  <li>Filter friends</li>
+                  <li>Don't refresh tabs when changing</li>
+                  <li>For developers: use core-pages</li>
+              </ul>
+
+              <h4>Next steps</h4>
+              <ul>
+                  <li>Comments in suggestions</li>
+              </ul>
+          </div>
 
       </div>
     
